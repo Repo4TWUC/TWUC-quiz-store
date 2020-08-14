@@ -24,9 +24,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.h2database:h2'
-    runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
     // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.13'
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

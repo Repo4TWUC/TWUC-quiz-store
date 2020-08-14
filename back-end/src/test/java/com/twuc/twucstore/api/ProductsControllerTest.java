@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twuc.twucstore.domain.Product;
 import com.twuc.twucstore.dto.ProductDto;
 import com.twuc.twucstore.repository.ProductRepository;
+import com.twuc.twucstore.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -21,10 +23,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 class ProductsControllerTest {
 
-  @Autowired
   MockMvc mockMvc;
   @Autowired
   ProductRepository productRepository;
+  @Autowired
+  ProductService productService;
 
   ModelMapper modelMapper;
   ObjectMapper objectMapper;
@@ -34,19 +37,24 @@ class ProductsControllerTest {
 
   @BeforeEach
   void setUp() {
+    this.mockMvc = MockMvcBuilders.standaloneSetup(new ProductsController(this.productService))
+        .build();
+
     this.modelMapper = new ModelMapper();
     this.objectMapper = new ObjectMapper();
 
-    initProduct = new Product();
+    initProduct = new Product("可乐", 100);
     this.initProductDto = this.modelMapper.map(initProduct, ProductDto.class);
     this.initProductDto = this.productRepository.save(this.initProductDto);
   }
 
   @Test
-  void getProductsList() throws Exception {
+  void couldGetProductsList() throws Exception {
     this.mockMvc.perform(get("/ts/product"))
         .andExpect(jsonPath("$", hasSize(1)))
         .andExpect(jsonPath("$[0].id", is(this.initProductDto.getId())))
+        .andExpect(jsonPath("$[0].name", is(this.initProductDto.getName())))
+        .andExpect(jsonPath("$[0].price", is(this.initProductDto.getPrice())))
         .andExpect(status().isOk());
   }
 
