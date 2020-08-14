@@ -1,6 +1,7 @@
 package com.twuc.twucstore.api;
 
 import com.twuc.twucstore.domain.Product;
+import com.twuc.twucstore.repository.ProductRepository;
 import com.twuc.twucstore.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +13,8 @@ import java.util.List;
 public class ProductsController {
   ProductService productService;
 
-  ProductsController (ProductService productService) {
-    this.productService = productService;
+  ProductsController (ProductRepository productRepository) {
+    this.productService = new ProductService(productRepository);
   }
 
   @GetMapping("/ts/product")

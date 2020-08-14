@@ -4,6 +4,7 @@ import com.twuc.twucstore.domain.Product;
 import com.twuc.twucstore.dto.ProductDto;
 import com.twuc.twucstore.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +15,17 @@ public class ProductService {
   ProductRepository productRepository;
   ModelMapper modelMapper;
 
-  ProductService () {
+  public ProductService(ProductRepository productRepository) {
     this.modelMapper = new ModelMapper();
+    this.productRepository = productRepository;
   }
 
   public List<Product> getList(Integer id) {
+    if (id == null) {
+      return this.productRepository.findAll()
+          .stream().map(productDto -> modelMapper.map(productDto, Product.class))
+          .collect(Collectors.toList());
+    }
     return this.productRepository.findAll()
         .stream().map(productDto -> modelMapper.map(productDto, Product.class))
         .collect(Collectors.toList());

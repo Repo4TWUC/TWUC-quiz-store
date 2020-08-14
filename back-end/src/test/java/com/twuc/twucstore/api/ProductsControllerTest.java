@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -37,7 +38,7 @@ class ProductsControllerTest {
 
   @BeforeEach
   void setUp() {
-    this.mockMvc = MockMvcBuilders.standaloneSetup(new ProductsController(this.productService))
+    this.mockMvc = MockMvcBuilders.standaloneSetup(new ProductsController(this.productRepository))
         .build();
 
     this.modelMapper = new ModelMapper();
@@ -51,14 +52,14 @@ class ProductsControllerTest {
   @Test
   void couldGetProductsList() throws Exception {
     this.mockMvc.perform(get("/ts/product"))
+        .andDo(print())
         .andExpect(jsonPath("$", hasSize(1)))
-        .andExpect(jsonPath("$[0].id", is(this.initProductDto.getId())))
         .andExpect(jsonPath("$[0].name", is(this.initProductDto.getName())))
         .andExpect(jsonPath("$[0].price", is(this.initProductDto.getPrice())))
         .andExpect(status().isOk());
   }
 
   @Test
-  void addNewProduct() {
+  void couldAddNewProduct() {
   }
 }
