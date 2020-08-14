@@ -1,6 +1,6 @@
 import React from 'react';
 import productImg from '../../assets/product_placeholder.png';
-import './SingleGood.less';
+import './SingleGood.scss';
 
 class SingleGood extends React.Component {
   constructor(props) {

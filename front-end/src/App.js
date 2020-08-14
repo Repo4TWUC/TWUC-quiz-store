@@ -2,7 +2,6 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  NavLink,
   Switch
 } from "react-router-dom";
 import Header from './components/Header/Header';
@@ -15,23 +14,8 @@ class App extends React.Component {
   render() {
     return (
         <div className="App">
-          <Header />
           <Router className="app">
-            <header className="page-header">
-              <NavLink
-                  exact
-                  to="/"
-                  activeClassName="active"
-              >商城</NavLink>
-              <NavLink
-                  to="/order"
-                  activeClassName="active"
-              >订单</NavLink>
-              <NavLink
-                  to="/add"
-                  activeClassName="active"
-              >添加商品</NavLink>
-            </header>
+            <Header />
             <Switch>
               <Route exact path="/" component={Store}/>
               <Route exact path="/products" component={Order}/>

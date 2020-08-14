@@ -1,0 +1,21 @@
+.page-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  background-color: #001429;
+
+  a {
+    display: inline-block;
+    width: 120px;
+    height: 60px;
+    text-decoration: none;
+    line-height: 60px;
+    font-size: 25px;
+    color: white;
+    text-align: center;
+
+    &.active {
+      background-color: #1690ff;
+    }
+  }
+}

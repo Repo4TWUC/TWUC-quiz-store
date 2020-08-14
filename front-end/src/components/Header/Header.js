@@ -1,4 +1,6 @@
 import React from 'react';
+import{ NavLink } from "react-router-dom";
+import './Header.scss'
 
 class Header extends React.Component {
   constructor(props) {
@@ -8,9 +10,21 @@ class Header extends React.Component {
 
   render() {
     return (
-        <div>
-          this is components Header
-        </div>
+        <header className="page-header">
+          <NavLink
+              exact
+              to="/"
+              activeClassName="active"
+          >商城</NavLink>
+          <NavLink
+              to="/order"
+              activeClassName="active"
+          >订单</NavLink>
+          <NavLink
+              to="/add"
+              activeClassName="active"
+          >添加商品</NavLink>
+        </header>
     );
   }
 }
