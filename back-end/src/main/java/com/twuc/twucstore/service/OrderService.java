@@ -23,7 +23,7 @@ public class OrderService {
 
   public List<Order> getList() {
     return this.orderRepository.findAll()
-        .stream().map(orderDto -> new Order(orderDto.getProductDto().getId(), orderDto.getCount()))
+        .stream().map(orderDto -> new Order(orderDto.getId(), orderDto.getProductDto().getId(), orderDto.getCount()))
         .collect(Collectors.toList());
   }
 
