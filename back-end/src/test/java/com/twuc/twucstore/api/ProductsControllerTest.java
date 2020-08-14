@@ -1,5 +1,7 @@
 package com.twuc.twucstore.api;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twuc.twucstore.domain.Product;
 import com.twuc.twucstore.dto.ProductDto;
@@ -11,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -60,6 +63,13 @@ class ProductsControllerTest {
   }
 
   @Test
-  void couldAddNewProduct() {
+  void couldAddNewProduct() throws Exception {
+    this.productRepository.deleteAll();
+    String userJson = objectMapper.writeValueAsString(initProduct);
+
+    this.mockMvc.perform(post("/ts/product").contentType(MediaType.APPLICATION_JSON).content(userJson))
+        .andExpect(status().isCreated());
+
+    assertEquals(this.productRepository.findAll().size(), 1);
   }
 }
