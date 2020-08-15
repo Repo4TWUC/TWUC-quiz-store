@@ -2,23 +2,40 @@ li {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   width: 200px;
+  padding: 10px;
+  margin: 20px;
+  border: thin solid gray;
 
   span {
     font-weight: bold;
+
+    &.name {
+      display: block;
+      width: 100%;
+      text-align: left;
+      font-size: 23px;
+      font-weight: bold;
+      color: black;
+    }
   }
 
   img {
     margin: 10px 0;
+    height: 150px;
+    width: 150px;
   }
 
   .foot {
     display: flex;
-    width: 150px;
     justify-content: space-between;
+    width: 100%;
 
     .add-cart-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
       padding: 0 10px;
       background-color: blue;
       color: white;
