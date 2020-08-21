@@ -12,5 +12,9 @@ export default {
       }
     }
     return await fetch(`${url}/product`, options).then(res => res.json());
+  },
+
+  async getProduct() {
+    return await fetch(`${url}/product`).then(res => res.json());
   }
 }
