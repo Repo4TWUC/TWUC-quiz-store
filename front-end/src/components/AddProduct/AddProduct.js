@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, InputNumber, Button } from 'antd';
+import {Form, Input, InputNumber, Button, Select, notification} from 'antd';
 import './AddProduct.scss'
 import ProductService from '../../service/ProductService'
 
@@ -47,11 +47,27 @@ class AddProduct extends React.Component {
               rules={[
                 {
                   required: true,
-                  message: 'Please input your password!',
+                  message: '请输入价格',
                 },
               ]}
           >
             <InputNumber min={1} max={9999}/>
+          </Form.Item>
+
+          <Form.Item
+              label="单位"
+              name="unit"
+              rules={[
+                {
+                  required: true,
+                  message: '请选择单位',
+                },
+              ]}
+          >
+            <Select defaultValue="" style={{ width: 120 }}>
+              <Select.Option value="瓶">瓶</Select.Option>
+              <Select.Option value="袋">袋</Select.Option>
+            </Select>
           </Form.Item>
 
           <Form.Item {...tailLayout}>
@@ -64,7 +80,19 @@ class AddProduct extends React.Component {
   }
 
   onFinish (values) {
-    this.addNewProduct(values);
+    this.addNewProduct(values)
+        .then(() => {
+          notification['success']({
+            message: 'Success',
+            description: '添加商品成功'
+          })
+        })
+        .catch(() => {
+          notification['error']({
+            message: 'Error',
+            description: '添加商品失败，请重试'
+          })
+        })
   }
 
   addNewProduct(values) {
