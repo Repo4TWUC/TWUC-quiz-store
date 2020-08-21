@@ -52,11 +52,11 @@ class OrderControllerTest {
     this.modelMapper = new ModelMapper();
     this.objectMapper = new ObjectMapper();
 
-    Product product = new Product("可乐", 100);
+    Product product = new Product(0, "可乐", 100, "瓶");
     ProductDto productDto = modelMapper.map(product, ProductDto.class);
     productDto = this.productRepository.save(productDto);
 
-    initOrder = new Order(productDto.getId(), 100);
+    initOrder = new Order(1, productDto.getId(), 100);
     this.initOrderDto = this.modelMapper.map(initOrder, OrderDto.class);
     this.initOrderDto.setProductDto(productDto);
     this.initOrderDto = this.orderRepository.save(this.initOrderDto);
@@ -76,7 +76,11 @@ class OrderControllerTest {
     this.orderRepository.deleteAll();
     String userJson = objectMapper.writeValueAsString(initOrder);
 
-    this.mockMvc.perform(post("/ts/order").contentType(MediaType.APPLICATION_JSON).content(userJson))
+    this.mockMvc.perform(post("/ts/order").contentType(MediaType.APPLICATION_JSON)
+        .characterEncoding("utf-8")
+        .content(userJson)
+    )
+        .andDo(print())
         .andExpect(status().isCreated());
 
     assertEquals(this.orderRepository.findAll().size(), 1);

@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*",maxAge = 3600)
 public class ProductsController {
   ProductService productService;
 
@@ -23,8 +24,9 @@ public class ProductsController {
   }
 
   @PostMapping("/ts/product")
-  public ResponseEntity<Object> addNewProduct (@RequestBody Product product) {
+  public ResponseEntity<List<Product>> addNewProduct (@RequestBody Product product) {
     Integer id = this.productService.add(product);
-    return ResponseEntity.created(URI.create("/ts/product/" + id)).build();
+    return ResponseEntity.created(URI.create("/ts/product/" + id))
+        .body(this.productService.getList(null));
   }
 }

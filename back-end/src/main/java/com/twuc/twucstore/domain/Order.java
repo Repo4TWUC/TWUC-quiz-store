@@ -11,9 +11,4 @@ public class Order {
   private Integer id;
   private Integer productId;
   private Integer count;
-
-  public Order(Integer productId, Integer count) {
-    this.productId = productId;
-    this.count = count;
-  }
 }

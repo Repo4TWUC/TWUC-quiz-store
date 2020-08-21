@@ -24,6 +24,8 @@ public class OrderDto {
 
   private Integer count;
 
+  private String unit;
+
   @ManyToOne
   private ProductDto productDto;
 }

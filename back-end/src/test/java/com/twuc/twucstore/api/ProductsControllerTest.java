@@ -47,7 +47,7 @@ class ProductsControllerTest {
     this.modelMapper = new ModelMapper();
     this.objectMapper = new ObjectMapper();
 
-    initProduct = new Product("可乐", 100);
+    initProduct = new Product(0, "可乐", 100, "瓶");
     this.initProductDto = this.modelMapper.map(initProduct, ProductDto.class);
     this.initProductDto = this.productRepository.save(this.initProductDto);
   }
@@ -67,7 +67,11 @@ class ProductsControllerTest {
     this.productRepository.deleteAll();
     String userJson = objectMapper.writeValueAsString(initProduct);
 
-    this.mockMvc.perform(post("/ts/product").contentType(MediaType.APPLICATION_JSON).content(userJson))
+    this.mockMvc.perform(
+        post("/ts/product")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(userJson)
+    )
         .andExpect(status().isCreated());
 
     assertEquals(this.productRepository.findAll().size(), 1);
