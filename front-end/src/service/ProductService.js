@@ -13,8 +13,7 @@ const getPostOptions = (data) => {
 
 export default {
   async addProduct(product) {
-    const data = JSON.stringify(product);
-    return await fetch(`${url}/product`, getPostOptions(data)).then(res => res.json());
+    return await fetch(`${url}/product`, getPostOptions(product)).then(res => res.json());
   },
 
   async getProduct() {
@@ -22,10 +21,10 @@ export default {
   },
 
   async buy(cart) {
-    return await fetch(`${url}/buy/product`, getPostOptions(cart)).then(res => res.json());
+    return await fetch(`${url}/order`, getPostOptions(cart)).then(res => res.json());
   },
 
   async getOrders() {
-    return await fetch(`${url}/orders`).then(res => res.json());
+    return await fetch(`${url}/order`).then(res => res.json());
   }
 }

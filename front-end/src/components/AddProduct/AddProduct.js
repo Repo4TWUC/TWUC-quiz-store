@@ -8,6 +8,7 @@ class AddProduct extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.formRef = React.createRef();
   }
 
   render() {
@@ -27,6 +28,7 @@ class AddProduct extends React.Component {
             }}
             onFinish={this.onFinish.bind(this)}
             className="add-form"
+            ref={this.formRef}
         >
           <Form.Item
               label="商品名称"
@@ -64,7 +66,7 @@ class AddProduct extends React.Component {
                 },
               ]}
           >
-            <Select defaultValue="" style={{ width: 120 }}>
+            <Select style={{ width: 120 }}>
               <Select.Option value="瓶">瓶</Select.Option>
               <Select.Option value="袋">袋</Select.Option>
             </Select>
@@ -96,11 +98,15 @@ class AddProduct extends React.Component {
   }
 
   addNewProduct(values) {
-    ProductService.addProduct(values)
-        .then(() => {
-          console.log('success');
-        },  (e) => {
+   return ProductService.addProduct(values)
+        .then(data => {
+          this.formRef.current.resetFields();
+          this.props.setProducts(data);
+          return Promise.resolve();
+        })
+        .catch(e => {
           console.error(e);
+          return Promise.reject();
         })
   }
 }

@@ -9,13 +9,13 @@ class SingleGood extends React.Component {
   }
 
   render() {
-    const { name, price, onAddToCart, id } = this.props;
+    const { name, price, onAddToCart, id, unit } = this.props;
     return (
       <li>
         <img src={productImg} className="image-size" alt="good-img" />
         <span className="name">{name}</span>
         <div className="foot">
-          <span>{price}元/瓶</span>
+          <span>{price}元/{unit}</span>
           <button className="add-cart-btn" onClick={() => {
             onAddToCart(id)
           }}>

@@ -22,7 +22,7 @@ class Order extends React.Component {
         }
       },
     ];
-    const data = [];
+    const data = this.props.orderList;
     return (<Table columns={columns} dataSource={data} bordered pagination={false} />);
   }
 }

@@ -19,7 +19,8 @@ class App extends React.Component {
     this.state = {
       cartCount: 0,
       cart: [],
-      goodsList: []
+      goodsList: [],
+      orderList: []
     }
   }
 
@@ -33,8 +34,12 @@ class App extends React.Component {
               <Route exact path="/" >
                 <Store goodsList={this.state.goodsList} onAddToCart={this.onAddToCart.bind(this)} />
               </Route>
-              <Route exact path="/order" component={Order}/>
-              <Route path="/add" component={AddProduct} />
+              <Route exact path="/order">
+                <Order orderList={this.state.orderList}/>
+              </Route>
+              <Route path="/add" >
+                <AddProduct setProducts={this.setGoodsList.bind(this)} />
+              </Route>
               <Route path="*" component={Store} />
             </Switch>
             <ShopCart {...{cart, cartCount, goodsList}} onClear={this.clearCart.bind(this)} onBuy={this.buyAll.bind(this)} />
@@ -50,19 +55,31 @@ class App extends React.Component {
     })
   }
 
+  setGoodsList(goodsList) {
+    this.setState({
+      goodsList: goodsList
+    })
+  }
+
   buyAll() {
-    ProductService.buy(this.state.cart)
-        .then(() => {
-          this.getOrderList()
+    const order = {
+      id: 0,
+      orderItems: this.state.cart
+    }
+    ProductService.buy(order)
+        .then((order) => {
+          this.setState({
+            orderList: order
+          })
         })
   }
 
   onAddToCart (productId) {
     const newCart = _.cloneDeep(this.state.cart);
-    let curProduct = newCart.find(itm => itm.id === productId);
+    let curProduct = newCart.find(itm => itm.productId === productId);
 
     if (!curProduct) {
-      curProduct = {id: productId, count: 0};
+      curProduct = { productId, count: 0};
       newCart.push(curProduct)
     }
 
