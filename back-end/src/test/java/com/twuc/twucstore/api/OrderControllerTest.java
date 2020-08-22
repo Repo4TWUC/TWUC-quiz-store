@@ -51,6 +51,8 @@ class OrderControllerTest {
 
   @BeforeEach
   void setUp() {
+    this.orderRepository.deleteAll();
+    this.orderItemRepository.deleteAll();
     this.mockMvc = MockMvcBuilders.standaloneSetup(new OrderController(this.orderRepository, this.productRepository, orderItemRepository))
         .build();
 
@@ -69,7 +71,6 @@ class OrderControllerTest {
 
   @Test
   void couldGetOrderList() throws Exception {
-    this.orderRepository.save(initOrderDto);
     this.mockMvc.perform(get("/ts/order"))
         .andExpect(jsonPath("$", hasSize(1)))
         .andExpect(status().isOk());
@@ -77,6 +78,7 @@ class OrderControllerTest {
 
   @Test
   void couldAddNewOrder() throws Exception {
+    this.orderItemRepository.deleteAll();
     this.orderRepository.deleteAll();
     String userJson = objectMapper.writeValueAsString(initOrder);
 
