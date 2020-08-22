@@ -41,8 +41,11 @@ public class OrderService {
   }
 
   public Integer add(Order order) {
-    OrderDto newOrder = modelMapper.map(order, OrderDto.class);
-    return this.orderRepository.save(newOrder).getId();
+    OrderDto orderDto = modelMapper.map(order, OrderDto.class);
+    for (OrderItemDto orderItem : orderDto.getOrderItems()) {
+      orderItem.setOrderDto(orderDto);
+    }
+    return this.orderRepository.save(orderDto).getId();
   }
 
   public void deleteById(Integer id) {
