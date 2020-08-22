@@ -2,10 +2,12 @@ package com.twuc.twucstore.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twuc.twucstore.domain.Order;
+import com.twuc.twucstore.domain.OrderItem;
 import com.twuc.twucstore.domain.Product;
 import com.twuc.twucstore.dto.OrderDto;
 import com.twuc.twucstore.dto.ProductDto;
 import com.twuc.twucstore.exception.TsExceptionHandler;
+import com.twuc.twucstore.repository.OrderItemRepository;
 import com.twuc.twucstore.repository.OrderRepository;
 import com.twuc.twucstore.repository.ProductRepository;
 import com.twuc.twucstore.service.OrderService;
@@ -18,6 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,6 +39,8 @@ class OrderControllerTest {
   @Autowired
   ProductRepository productRepository;
   @Autowired
+  OrderItemRepository orderItemRepository;
+  @Autowired
   OrderService orderService;
 
   ModelMapper modelMapper;
@@ -45,29 +51,27 @@ class OrderControllerTest {
 
   @BeforeEach
   void setUp() {
-    this.mockMvc = MockMvcBuilders.standaloneSetup(new OrderController(this.orderRepository, this.productRepository))
-        .setControllerAdvice(new TsExceptionHandler())
+    this.mockMvc = MockMvcBuilders.standaloneSetup(new OrderController(this.orderRepository, this.productRepository, orderItemRepository))
         .build();
 
     this.modelMapper = new ModelMapper();
     this.objectMapper = new ObjectMapper();
 
-    Product product = new Product(0, "可乐", 100, "瓶");
+    Product product = new Product(null, "可乐", 100, "瓶");
     ProductDto productDto = modelMapper.map(product, ProductDto.class);
     productDto = this.productRepository.save(productDto);
 
-    initOrder = new Order(1, productDto.getId(), 100);
-    this.initOrderDto = this.modelMapper.map(initOrder, OrderDto.class);
-    this.initOrderDto.setProductDto(productDto);
-    this.initOrderDto = this.orderRepository.save(this.initOrderDto);
+    OrderItem orderItem = new OrderItem(null, productDto.getId(), 100);
+    initOrder = new Order(null, List.of(orderItem));
+    initOrderDto = modelMapper.map(initOrder, OrderDto.class);
+    initOrderDto = this.orderRepository.save(initOrderDto);
   }
 
   @Test
   void couldGetOrderList() throws Exception {
+    this.orderRepository.save(initOrderDto);
     this.mockMvc.perform(get("/ts/order"))
         .andExpect(jsonPath("$", hasSize(1)))
-        .andExpect(jsonPath("$[0].count", is(this.initOrder.getCount())))
-        .andExpect(jsonPath("$[0].productId", is(this.initOrder.getProductId())))
         .andExpect(status().isOk());
   }
 
@@ -80,7 +84,6 @@ class OrderControllerTest {
         .characterEncoding("utf-8")
         .content(userJson)
     )
-        .andDo(print())
         .andExpect(status().isCreated());
 
     assertEquals(this.orderRepository.findAll().size(), 1);
