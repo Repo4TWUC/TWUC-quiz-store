@@ -12,6 +12,7 @@ import ShopCart from './components/ShopCart/ShopCart';
 import Order from './components/Order/Order';
 import AddProduct from './components/AddProduct/AddProduct';
 import ProductService from "./service/ProductService";
+import {notification} from "antd";
 
 class App extends React.Component {
   constructor() {
@@ -35,7 +36,7 @@ class App extends React.Component {
                 <Store goodsList={this.state.goodsList} onAddToCart={this.onAddToCart.bind(this)} />
               </Route>
               <Route exact path="/order">
-                <Order orderList={this.state.orderList}/>
+                <Order orderList={this.state.orderList} onDelete={this.onDeleteOrder.bind(this)} goodsList={this.state.goodsList}/>
               </Route>
               <Route path="/add" >
                 <AddProduct setProducts={this.setGoodsList.bind(this)} />
@@ -68,8 +69,38 @@ class App extends React.Component {
     }
     ProductService.buy(order)
         .then((order) => {
+          this.clearCart();
           this.setState({
             orderList: order
+          })
+          notification['success']({
+            message: 'Success',
+            description: '购买成功，可前往订单页面查看'
+          })
+        })
+        .catch(() => {
+          notification['error']({
+            message: 'Error',
+            description: '购买失败，请重试'
+          })
+        })
+  }
+
+  onDeleteOrder(id) {
+    ProductService.deleteOrder(id)
+        .then((order) => {
+          notification['success']({
+            message: 'Success',
+            description: '删除订单成功'
+          })
+          this.setState({
+            orderList: order
+          })
+        })
+        .catch(() => {
+          notification['error']({
+            message: 'Error',
+            description: '删除订单失败，请重试'
           })
         })
   }
@@ -101,15 +132,15 @@ class App extends React.Component {
         .catch((e) => {
           console.error(e);
         });
-  }
-
-  getOrderList() {
     ProductService.getOrders()
-        .then(data => {
+        .then((json) => {
           this.setState({
-            orderList: data
-          })
+            orderList: json
+          });
         })
+        .catch((e) => {
+          console.error(e);
+        });
   }
 }
 

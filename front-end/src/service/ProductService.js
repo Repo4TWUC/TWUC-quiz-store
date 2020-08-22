@@ -26,5 +26,8 @@ export default {
 
   async getOrders() {
     return await fetch(`${url}/order`).then(res => res.json());
+  },
+  async deleteOrder(id) {
+    return await fetch(`${url}/order/${id}`, {method: 'DELETE'}).then(res => res.json());
   }
 }

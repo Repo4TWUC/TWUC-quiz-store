@@ -33,7 +33,9 @@ public class OrderController {
   }
 
   @DeleteMapping("/ts/order/{id}")
-  public void deleteOrderById (@PathVariable Integer id) {
+  public ResponseEntity<List<Order>> deleteOrderById (@PathVariable Integer id) {
     this.orderService.deleteById(id);
+
+    return ResponseEntity.ok(this.orderService.getList());
   }
 }

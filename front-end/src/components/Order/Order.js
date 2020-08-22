@@ -15,15 +15,40 @@ class Order extends React.Component {
       { title: 'Unit', dataIndex: 'unit', key: 'unit' },
       {
         title: 'Operate',
-        dataIndex: '',
+        dataIndex: 'action',
         key: 'del',
-        render: () => {
-            return (<Button type="primary" size={"small"}>Buy Now</Button>)
+        render: (text, record) => {
+          if (text === 'true')
+            return (<Button type="primary" danger size={"small"} onClick={() => {
+              this.props.onDelete(record.key)
+            }}>Delete</Button>)
+          else
+            return (<span/>);
         }
       },
     ];
-    const data = this.props.orderList;
+    const data = this.transformOrder(this.props.orderList);
     return (<Table columns={columns} dataSource={data} bordered pagination={false} />);
+  }
+
+  transformOrder(orderList) {
+    return orderList.map(order => {
+      return {
+        key: order.id,
+        name: `Order: ${order.id}`,
+        children: order.orderItems.map(item => {
+          const curGood = this.props.goodsList.find(good => good.id === item.productId)
+          return {
+            name: curGood.name,
+            price: curGood.price,
+            count: item.count,
+            unit: curGood.unit,
+            action: 'false'
+          }
+        }),
+        action: 'true'
+      }
+    })
   }
 }
 
